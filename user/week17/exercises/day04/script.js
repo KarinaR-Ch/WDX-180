@@ -43,6 +43,87 @@ const renderTweet = (name, handle, date, title, img, body, comments, retweets,li
 
 }
 
+const tweetForm = document.getElementById('tweet-form');
+const titleInput = document.getElementById('title');
+const bodyInput = document.getElementById('body');
+
+function getCurrentDate() {
+  const now = new Date();
+  const day = now.getDate();
+  const month = now.toLocaleString('default', { month: 'short' });
+  const year = now.getFullYear();
+  return `${day} ${month} ${year}`;
+}
+
+function handleTweetSubmit(event) {
+  event.preventDefault(); // Prevent page refresh
+  
+  const title = titleInput.value.trim();
+  const body = bodyInput.value.trim();
+  
+  if (!title || !body) {
+    alert('Please fill in both title and tweet content');
+    return;
+  }
+  
+  renderTweet(
+    "Tailwind CSS",
+    "@tailwindcss",
+    getCurrentDate(),
+    title,
+    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/tt_tweet3.jpg",
+    body,
+    0, 
+    0,
+    0 
+  );
+  
+  titleInput.value = '';
+  bodyInput.value = '';
+  
+  titleInput.focus();
+}
+
+tweetForm.addEventListener('submit', handleTweetSubmit);
+
+bodyInput.addEventListener('keydown', function(event) {
+ 
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault(); 
+    handleTweetSubmit(event); 
+  }
+});
+
+document.addEventListener('click', function(event) {
+  if (event.target.closest('.like-btn')) {
+    event.preventDefault();
+    const likeBtn = event.target.closest('.like-btn');
+    const likeIcon = likeBtn.querySelector('i');
+    const likeCount = likeBtn.querySelector('i').nextSibling;
+    
+    if (likeIcon.classList.contains('fa-heart')) {
+      likeIcon.classList.remove('fa-heart');
+      likeIcon.classList.add('fa-heart-o');
+      likeBtn.classList.remove('hover:text-red');
+      likeBtn.classList.add('text-red');
+      
+      const currentLikes = parseInt(likeCount.textContent);
+      likeCount.textContent = currentLikes + 1;
+    } else {
+      likeIcon.classList.remove('fa-heart-o');
+      likeIcon.classList.add('fa-heart');
+      likeBtn.classList.remove('text-red');
+      likeBtn.classList.add('hover:text-red');
+      
+     
+      const currentLikes = parseInt(likeCount.textContent);
+      likeCount.textContent = currentLikes - 1;
+    }
+  }
+});
+
+
+
 renderTweet(
   "Tailwind CSS",
   "@tailwindcss",
